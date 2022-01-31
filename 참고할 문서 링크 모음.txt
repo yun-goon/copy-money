@@ -1,1 +1,17 @@
 깃과 깃허브 : https://opentutorials.org/course/3838 
+
+
+
+
+
+
+
+
+
+
+
+기타 : 
+
+라즈베리파이 클라우드 파일 서버로 활용하기 : https://blog.naver.com/emperonics/221894586265
+라즈베리파이 제로로 주식, 날씨 현황판 만들기 : https://blog.naver.com/emperonics/222247749109
+텔레그램 봇 만들기 : https://blog.naver.com/senshig/222593752704
