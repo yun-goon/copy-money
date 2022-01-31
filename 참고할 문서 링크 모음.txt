@@ -14,9 +14,27 @@
 
 
 
-기타 : 
+참조 : 
 
 라즈베리파이 클라우드 파일 서버로 활용하기(seafile) : https://blog.naver.com/emperonics/221894586265
 라즈베리파이 젠킨스 서버 구축 : https://blog.naver.com/senshig/222226657874
 라즈베리파이 제로로 주식, 날씨 현황판 만들기 : https://blog.naver.com/emperonics/222247749109
 텔레그램 봇 만들기 : https://blog.naver.com/senshig/222593752704
+
+* upbit api(guideline)
+https://docs.upbit.com/docs
+https://docs.upbit.com/reference/
+
+* fbprophet(example)
+https://study-by-security.tistory.com/17
+https://github.com/Maker-Kim/Study/blob/master/python/Coin_Ai.ipynb
+https://zzsza.github.io/data/2019/02/06/prophet/
+https://peerj.com/preprints/3190/
+https://dacon.io/codeshare/2459
+
+* mathplotlib(guideline)
+https://wikidocs.net/92071
+
+* logging(guideline)
+https://greeksharifa.github.io/%ED%8C%8C%EC%9D%B4%EC%8D%AC/2019/12/13/logging/
+https://minimin2.tistory.com/41
