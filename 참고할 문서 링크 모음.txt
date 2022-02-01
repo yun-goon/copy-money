@@ -6,14 +6,6 @@
 
 
 
-
-
-
-
-
-
-
-
 참조 : 
 
 라즈베리파이 클라우드 파일 서버로 활용하기(seafile) : https://blog.naver.com/emperonics/221894586265
@@ -38,3 +30,6 @@ https://wikidocs.net/92071
 * logging(guideline)
 https://greeksharifa.github.io/%ED%8C%8C%EC%9D%B4%EC%8D%AC/2019/12/13/logging/
 https://minimin2.tistory.com/41
+
+*tenserflow 
+https://opentutorials.org/course/4570
