@@ -33,3 +33,8 @@ https://minimin2.tistory.com/41
 
 *tenserflow 
 https://opentutorials.org/course/4570
+
+*웹 크롤링
+https://dorudoru.tistory.com/1472
+https://pgh268400.tistory.com/310
+https://chicken-nlp.tistory.com/4
