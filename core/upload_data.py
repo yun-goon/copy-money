@@ -29,7 +29,7 @@ class Get_data():
 
         res = requests.get(self.server_url + "/v1/accounts", headers=headers)
 
-        print(res.json())
+        return json.loads(res.json())
 
     # 주문 넣기
     def order(self, market, side, volume, price, ord_type):
@@ -69,6 +69,7 @@ class Get_data():
 
     # 주문 정보 조회
     def order_check(self, market):
+
         query = {
             'market': market,
         }
@@ -91,7 +92,7 @@ class Get_data():
 
         res = requests.get(self.server_url + "/v1/orders/chance", params=query, headers=headers)
 
-        print(res.json())
+        return json.loads(res.json())
 
     # coin 이름 불러오기
     def market_data(self):
@@ -100,28 +101,38 @@ class Get_data():
         headers = {"Accept": "application/json"}
 
         response = requests.request("GET", url, headers=headers)
-
-        print(response.text)
+        return json.loads(response.text)
 
     # coin 차트 데이터 불러오기
     def candle_data_rest(self, type, market, count):
         '''
 
-        :param type: days , minutes , weeks , months
+        :param type: days , minutes/1,2,3,10 , weeks , months
         :param market: KRW - BTC
         :param count: candle count
         :return:
         '''
-        url = f"https://api.upbit.com/v1/candles/{type}?market=%20{market}&count={count}&convertingPriceUnit=KRW"
+        # url = f"https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=20" #day
+        # url = "https://api.upbit.com/v1/candles/minutes/1?market=KRW-BTC&count=1" #min
+        # url = "https://api.upbit.com/v1/candles/weeks?market=KRW-BTC&count=1" #week
+        # url = "https://api.upbit.com/v1/candles/months?market=KRW-BTC&count=1" #month
+        if type == 'days':
+            url = f"https://api.upbit.com/v1/candles/days?market={market}&count={count}"  # day
+        elif type == 'weeks':
+            url = f"https://api.upbit.com/v1/candles/weeks?market={market}&count={count}" #week
+        elif type == 'months':
+            url = f"https://api.upbit.com/v1/candles/months?market={market}&count={count}" #month
+        elif type.isdigit():
+            url = f"https://api.upbit.com/v1/candles/minutes/{type}?market={market['market']}&count={count}"  # min
 
         headers = {"Accept": "application/json"}
 
         response = requests.request("GET", url, headers=headers)
 
-        print(response.text)
+        return json.loads(response.text)
 
     # 실시간 체결 데이터 조회 (1개)
-    def Trade_data_socket(self, market):
+    def trade_data_socket(self, market):
         async def upbit_websocket():
             websocket = await websockets.connect("wss://api.upbit.com/websocket/v1", ping_interval=None)
             await websocket.send(json.dumps([{"ticket":"UNIQUE_TICKET"},{"type":"trade","codes":[market]}]))
