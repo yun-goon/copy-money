@@ -31,10 +31,17 @@ https://wikidocs.net/92071
 https://greeksharifa.github.io/%ED%8C%8C%EC%9D%B4%EC%8D%AC/2019/12/13/logging/
 https://minimin2.tistory.com/41
 
-*tenserflow 
+
+* tenserflow
 https://opentutorials.org/course/4570
+# 강화학습
+https://youtube.com/playlist?list=PL_iJu012NOxehE8fdF9me4TLfbdv3ZW8g
+# 실제 주식투자 강화학습으로 코딩한 예시
+https://github.com/quantylab
+
 
 *웹 크롤링
 https://dorudoru.tistory.com/1472
 https://pgh268400.tistory.com/310
 https://chicken-nlp.tistory.com/4
+>>>>>>> f2cf572308cab0bc1b0915134a1dfc4d42d4206a

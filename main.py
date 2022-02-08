@@ -1,27 +1,38 @@
-import time
-
+import sys
+from PyQt5 import uic
 from core.upload_data import Get_data
+from core.base_searching import Strainer
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
-import threading
-import time
-import pyupbit
+form_class = uic.loadUiType("coin.ui")[0]
 
-class main():
+class MyWindow(QMainWindow, form_class):
     def __init__(self):
-        print('coin trading program')
-        self.prosess = prosess()
-        self.prosess.wallet_loop()
+        super().__init__()
+        self.setupUi(self)
+        self.gd = Get_data()
 
-class prosess():
-    def __init__(self):
-        self.up = Get_data()
+        self.start = Strainer()
 
-    def wallet_loop(self):
-        threading.Thread(target=self.up.get_wallet())
-        while True:
-            print('operating')
-            time.sleep(1)
+        # 상태바 타이머
+        self.timer = QTimer(self)
+        self.timer.start(1000)
+        self.timer.timeout.connect(self.timeout)
 
+        self.pushButton.clicked.connect(self.start.search_routine)
 
-if __name__=='__main__':
-    Main = main()
+    def timeout(self):
+        current_time = QTime.currentTime()
+
+        text_time = current_time.toString("hh:mm:ss")
+        time_msg = "현재시간: " + text_time
+
+        self.statusbar.showMessage(time_msg + " | Yun & Kim")
+
+if __name__ == "__main__":
+    # Main process
+    app = QApplication(sys.argv)
+    mywindow = MyWindow()
+    mywindow.show()
+    app.exec_()
