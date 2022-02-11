@@ -91,6 +91,6 @@ def article_parse(dc_id, keyword):
 
 # 검색할때 설정해줘야할 것들
 dc_id = "bitcoins_new1"
-keyword = "비트코인"
+keyword = "하락"
 
 article_parse(dc_id,keyword)
