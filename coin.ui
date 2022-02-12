@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1412</width>
-    <height>795</height>
+    <width>1433</width>
+    <height>826</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="watching_coin">
+         <widget class="QTableWidget" name="coinlist">
           <column>
            <property name="text">
             <string>코인명</string>
@@ -179,7 +179,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="start_btn">
+         <widget class="QPushButton" name="pushButton">
           <property name="text">
            <string>start</string>
           </property>
@@ -196,7 +196,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1412</width>
+     <width>1433</width>
      <height>26</height>
     </rect>
    </property>

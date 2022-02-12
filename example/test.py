@@ -1,51 +1,38 @@
-# ch05/05_26.py
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic
-from PyQt5.QtCore import *
-import pybithumb
-import time
+from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal
+#사용자 정의 시그널 사용을 위한 클래스 정의
 
-tickers = ["BTC", "ETH", "BCH", "ETC"]
-form_class = uic.loadUiType("bull.ui")[0]
+class CustomSignal(QObject):
+    signal = pyqtSignal(int, str)
+    #반드시 클래스 변수로 선언할 것
 
-class Worker(QThread):
     def run(self):
-        while True:
-            data = {}
+        tempstr = "emit으로 전달"
+        for i in range(1, 11):
+            self.signal.emit(i, tempstr)
+            #customFunc 메서드 실행시 signal의 emit 메서드사용
 
-            for ticker in tickers:
-                data[ticker] = self.get_market_infos(ticker)
-
-            print(data)
-            time.sleep(5)
-
-    def get_market_infos(self, ticker):
-        try:
-            df = pybithumb.get_ohlcv(ticker)
-            ma5 = df['close'].rolling(window=5).mean()
-            last_ma5 = ma5[-2]
-            price = pybithumb.get_current_price(ticker)
-
-            state = None
-            if price > last_ma5:
-                state = "상승장"
-            else:
-                state = "하락장"
-
-            return price, last_ma5, state
-        except:
-            return None, None, None
-
-class MyWindow(QMainWindow, form_class):
+class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        customsignal = CustomSignal()
+        #Mysignal 클래스의 객체 선언
+        customsignal.signal.connect(self.funcEmit)
+        #객체에 대한시그널 및 슬롯 설정
+        customsignal.run()
+        #객체의 customFunc 메서드 실행
+        # #customFunc에서 emit 메서드 실행시 GUI에서 받음.
+        @pyqtSlot(int, str)
+        def funcEmit(self, i, tempstr):
+            self.i = i
+            #emit을 통해 받은 값을 GUI 객체 변수에 저장
+            self.tempstr = tempstr
+            print(str(self.i)+"번째 출력 : ", self.tempstr)
+            #출력해보기
 
-        self.worker = Worker()
-        self.worker.start()
-
-app = QApplication(sys.argv)
-window = MyWindow()
-window.show()
-app.exec_()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    app.exec_()
