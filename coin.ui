@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>812</width>
-    <height>651</height>
+    <width>1412</width>
+    <height>795</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,6 +17,44 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <family>휴먼둥근헤드라인</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>내역</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="searched_coin"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <family>휴먼둥근헤드라인</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>공지사항</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextBrowser" name="notice_2"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
       <item row="1" column="0">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -34,7 +72,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox"/>
+           <widget class="QComboBox" name="coin_list_cbox"/>
           </item>
          </layout>
         </item>
@@ -51,7 +89,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="watching_coin">
           <column>
            <property name="text">
             <string>코인명</string>
@@ -84,7 +122,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableWidget" name="tableWidget_2">
+           <widget class="QTableWidget" name="wallet">
             <column>
              <property name="text">
               <string>코인명</string>
@@ -106,85 +144,46 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="1">
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+     </layout>
+    </item>
+    <item row="0" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="font">
+         <font>
+          <family>휴먼둥근헤드라인</family>
+         </font>
+        </property>
+        <property name="text">
+         <string>차트(1H)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="chart"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <family>휴먼둥근헤드라인</family>
-           </font>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="start_btn">
           <property name="text">
-           <string>지난 결과</string>
+           <string>start</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="textBrowser"/>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <item>
-           <widget class="QComboBox" name="comboBox_2">
-            <property name="font">
-             <font>
-              <family>휴먼둥근헤드라인</family>
-             </font>
-            </property>
-            <item>
-             <property name="text">
-              <string>1분봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>3분봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>5분봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>30분봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>1시간봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>주봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>일봉</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>월봉</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTextBrowser" name="textBrowser_2"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>start</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </item>
@@ -197,7 +196,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>812</width>
+     <width>1412</width>
      <height>26</height>
     </rect>
    </property>
