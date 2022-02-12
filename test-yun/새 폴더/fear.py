@@ -88,3 +88,4 @@ df=pd.DataFrame(fear, columns=fear_list)
 df.to_csv('fear_index.csv',encoding='utf-8-sig')
 
 print(now)
+print(fd)
