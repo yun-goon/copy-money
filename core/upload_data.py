@@ -103,6 +103,13 @@ class Get_data():
         response = requests.request("GET", url, headers=headers)
         return json.loads(response.text)
 
+    # 코인 이름 다르게 불러오기
+    def coin_name_loading(self):
+        tickers = pyupbit.get_tickers(fiat="KRW")
+
+        return tickers
+
+
     # coin 차트 데이터 불러오기
     def candle_data_rest(self, type, market, count):
         '''

@@ -1,4 +1,5 @@
 import sys
+import pyupbit
 from PyQt5 import uic
 from core.upload_data import Get_data
 from core.base_searching import Strainer
@@ -20,7 +21,8 @@ class MyWindow(QMainWindow, form_class):
         self.timer.start(1000)
         self.timer.timeout.connect(self.timeout)
 
-        self.pushButton.clicked.connect(self.start.search_routine)
+        # self.pushButton.clicked.connect(self.start.search_routine)
+        self.pushButton.clicked.connect(self.ButtonstartPush)
 
     def timeout(self):
         current_time = QTime.currentTime()
@@ -30,9 +32,24 @@ class MyWindow(QMainWindow, form_class):
 
         self.statusbar.showMessage(time_msg + " | Yun & Kim")
 
+    def ButtonstartPush(self):
+        self.gd = Get_data()
+        tickers = self.gd.coin_name_loading()
+        self.coinlist.setRowCount(len(tickers))
+        for i, ticker in enumerate(tickers):
+            coinName =QTableWidgetItem(ticker)
+            self.coinlist.setItem(i,0,coinName)
+
+        # print(tickers)
+
+
 if __name__ == "__main__":
     # Main process
     app = QApplication(sys.argv)
     mywindow = MyWindow()
     mywindow.show()
     app.exec_()
+
+    #tickers=pyupbit.get_tickers(fiat="KRW")
+    # print(tickers)
+    # print(len(tickers))

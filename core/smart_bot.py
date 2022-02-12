@@ -1,4 +1,4 @@
-from upload_data import Get_data
+#from upload_data import Get_data
 
 import threading
 
