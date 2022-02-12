@@ -45,3 +45,6 @@ https://dorudoru.tistory.com/1472
 https://pgh268400.tistory.com/310
 https://chicken-nlp.tistory.com/4
 >>>>>>> f2cf572308cab0bc1b0915134a1dfc4d42d4206a
+
+*pyqt
+https://codetorial.net/pyqt5/widget/qcombobox.html
