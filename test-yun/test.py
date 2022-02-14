@@ -1,28 +1,42 @@
-import pandas as pd
-import pyupbit
+import time
+import os
+import sys
+import logging
+import traceback
+import math
 
-# print(pyupbit.Upbit)
+from decimal import Decimal
 
-# # 모든 종목 코드 확인
-# tickers = pyupbit.get_tickers()
-# print(tickers)
+# 공통 모듈 Import
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from module import upbit
 
-# # KRW로 표기된 종목의 코드 확인
-tickers = pyupbit.get_tickers(fiat="KRW")
-print(tickers)
+# -----------------------------------------------------------------------------
+# - Name : main
+# - Desc : 메인
+# -----------------------------------------------------------------------------
+if __name__ == '__main__':
 
-# 개별 가격 조회
-price_KRW = pyupbit.get_current_price(tickers)
+    # noinspection PyBroadException
+    try:
 
-price = list(price_KRW.values())
-print(price)
-#print("\nBTC : {0:>10,} 원".format(int(price_KRW["KRW-BTC"]))) # 딕셔너리 type
-#print("ETH : {0:>10,} 원".format(int(price_KRW["KRW-ETH"])))
-#print("XRP : {0:>10,} 원".format(int(price_KRW["KRW-XRP"])))
+        upbit.set_loglevel('I')
 
-# 아래와 같이 BTC로도 가격 조회가 가능함
-#price_BTC = pyupbit.get_current_price("BTC-ETH")
-#print("ETH : {} BTC\n".format(price_BTC))
+        indicators = upbit.get_indicator_sel('KRW-BTC', '60', 200, 5, ['RSI', 'CANDLE'])
 
-print(len(tickers))
-print(len(price))
+        # 보조지표 추출
+        rsi_data = indicators['RSI']
+        candles = indicators['CANDLE']
+
+        logging.info(rsi_data)
+        logging.info(candles)
+
+    except KeyboardInterrupt:
+        logging.error("KeyboardInterrupt Exception 발생!")
+        logging.error(traceback.format_exc())
+        sys.exit(-100)
+
+    except Exception:
+        logging.error("Exception 발생!")
+        logging.error(traceback.format_exc())
+        sys.exit(-200)
