@@ -5,26 +5,8 @@ from core.upload_data import Get_data
 from core.base_searching import Strainer
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from multiprocessing import Process, Queue
-import multiprocessing as mp
-import datetime
-import time
 
 form_class = uic.loadUiType("coin.ui")[0]
-
-class Consumer(QThread):
-    poped = pyqtSignal(str)
-
-    def __init__(self, q):
-        super().__init__()
-        self.q = q
-
-    def run(self):
-        while True:
-            if not self.q.empty():
-                data = self.q.get()
-                self.poped.emit(data)
-                print(data)
 
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
@@ -49,16 +31,6 @@ class MyWindow(QMainWindow, form_class):
         self.coin_list_upload()
         self.coin_list_cbox.currentIndexChanged.connect(self.coin_choice)
 
-        q = Queue()
-        # thread for data consumer
-        self.consumer = Consumer(q)
-        self.consumer.poped.connect(self.print_data)
-        self.consumer.start()
-
-    @pyqtSlot(str)
-    def print_data(self, data):
-        self.statusBar().showMessage(data)
-
     def timeout(self):
         current_time = QTime.currentTime()
 
@@ -67,20 +39,6 @@ class MyWindow(QMainWindow, form_class):
 
         self.statusbar.showMessage(time_msg + " | Yun & Kim")
 
-    # 멀티프로세싱 코인찾기
-    def search_start(self):
-        q = Queue()
-
-        # thread for data consumer
-        self.consumer = Consumer(q)
-        self.consumer.poped.connect(self.print_data)
-        self.consumer.start()
-
-        # producer process
-        p = Process(name="producer", target=self.start.search_routine, args=(q,), daemon=True)
-        p.start()
-
-    # 코인 선택시 실행되는 함수
     def coin_choice(self):
         coin = self.coin_list_cbox.currentText()
         self.notice_2.append(coin)
@@ -106,8 +64,6 @@ class MyWindow(QMainWindow, form_class):
             # 나도 밑에껄로함
             
             ## QTableWidget값은 str값이 들어가야함
-
-        self.search_start()
 
 if __name__ == "__main__":
     # Main process
