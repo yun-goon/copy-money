@@ -10,13 +10,14 @@ import websockets
 import asyncio
 import json
 
+
 class Get_data():
     def __init__(self):
         self.access_key = pr.access_key
-        self.secret_key = pr.access_key
+        self.secret_key = pr.secret_key
         self.server_url = 'http://api.upbit.com'
 
-    # 계좌 코인정보
+    # 계좌에 보유한 코인정보
     def get_wallet(self):
         payload = {
             'access_key': self.access_key,
@@ -29,7 +30,7 @@ class Get_data():
 
         res = requests.get(self.server_url + "/v1/accounts", headers=headers)
 
-        return json.loads(res.json())
+        return res
 
     # 주문 넣기
     def order(self, market, side, volume, price, ord_type):
