@@ -7,7 +7,7 @@ from core.base_searching import Strainer
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import math
-
+import time
 form_class = uic.loadUiType("coin.ui")[0]
 
 class MyWindow(QMainWindow, form_class):
@@ -33,8 +33,6 @@ class MyWindow(QMainWindow, form_class):
         self.coin_list_upload()
         self.coin_list_cbox.currentIndexChanged.connect(self.coin_choice)
 
-        #계좌 정보 업로드
-        # self.MyWalletLoading()
 
     def timeout(self):
         current_time = QTime.currentTime()
@@ -49,7 +47,6 @@ class MyWindow(QMainWindow, form_class):
         self.notice_2.append(coin)
 
     def coin_list_upload(self):
-        print(self.start.market_coin[1]['market'])
         for i in range(len(self.start.market_coin)):
             self.coin_list_cbox.addItem(self.start.market_coin[i]['market'])
 
@@ -62,10 +59,8 @@ class MyWindow(QMainWindow, form_class):
         list_return = [] # 수익률 목록
 
         # list_now_cost.append(walletDict[0]['currency'])
-
         for i in range(len(walletDict)): #코인 이름 목록 만드는거
             list_currency.append('KRW-' + walletDict[i]['currency'])
-
         for j in range(len(list_currency)): # 코인 가격 목록 만드는거
             prices = pyupbit.get_current_price(list_currency[j])
             list_now_cost.append(prices)
@@ -91,11 +86,8 @@ class MyWindow(QMainWindow, form_class):
         self.MyWalletLoading()
         self.gd = Get_data()
         tickers = self.gd.coin_name_loading() #list 타입
-        print(tickers)
         prices_KRW =  pyupbit.get_current_price(tickers) # dict 타입 /  나 이거 밖에서 어떻게 들고오는지 모르겠음
         prices = list(prices_KRW.values())
-        print(type(prices))
-        print(prices)
         self.coinlist.setRowCount(len(tickers)) # ui 몇줄일지설정
 
         for i, ticker in enumerate(tickers):
@@ -104,7 +96,7 @@ class MyWindow(QMainWindow, form_class):
             self.coinlist.setItem(i, 1, QTableWidgetItem(str(prices[i])))
             # 위에 두 방법중 밑에 방법이 나을듯?
             # 나도 밑에껄로함
-            
+
             ## QTableWidget값은 str값이 들어가야함
 
 
