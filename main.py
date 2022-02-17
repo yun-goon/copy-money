@@ -26,6 +26,11 @@ class MyWindow(QMainWindow, form_class):
         self.timer.start(1000)
         self.timer.timeout.connect(self.timeout)
 
+        # 상태바 타이머
+        self.timer2 = QTimer(self)
+        self.timer2.start(5000)
+        self.timer2.timeout.connect(self.timeout2)
+
         # self.pushButton.clicked.connect(self.start.search_routine)
         self.pushButton.clicked.connect(self.ButtonstartPush)
 
@@ -41,6 +46,9 @@ class MyWindow(QMainWindow, form_class):
         time_msg = "현재시간: " + text_time
 
         self.statusbar.showMessage(time_msg + " | Yun & Kim")
+
+    def timeout2(self):
+        self.ButtonstartPush()
 
     def coin_choice(self):
         coin = self.coin_list_cbox.currentText()

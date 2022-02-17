@@ -8,12 +8,10 @@ from core.upload_data import Get_data
 from core.smart_bot import *
 
 class Strainer():
-    def __init__(self,q):
+    def __init__(self):
         self.gd = Get_data()
         self.market_coin = self.gd.market_data()
         print(self.market_coin)
-
-        self.q = q
 
         self.searched_coin_data = {}
 
@@ -34,6 +32,4 @@ class Strainer():
 
         # 여기서부터 조건 짜서 넣기
         if True:
-            self.q.put(market['market'])
-
             self.searched_coin_data.update({market['market']:{'price':0,'process':'보유'}})

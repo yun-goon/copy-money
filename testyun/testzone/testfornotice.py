@@ -31,6 +31,8 @@ def mon_notice():
         while True:
             logging.info('업비트 공지사항 크롤링 중...')
 
+            test = []
+
             response = requests.get(page_url, headers=headers)
             upbit_notice = response.json()
 
@@ -70,7 +72,7 @@ def mon_notice():
                         title_main = title[0:4]
                         if title_main == "[거래]":
                             print(title_main)
-
+                            test.append(title_main)
 
 
 

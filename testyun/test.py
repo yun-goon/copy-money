@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
             upbit.set_loglevel('I')
 
-            indicators = upbit.get_indicator_sel('KRW-BTC', 'D', 200, 100, ['RSI', 'MFI', 'MACD', 'WILLIAMS'])
+            indicators = upbit.get_indicator_sel('KRW-BTC', 'D', 200, 200, ['RSI', 'MFI', 'MACD', 'WILLIAMS'])
 
             # 보조지표 추출
             rsi_data = indicators['RSI']
