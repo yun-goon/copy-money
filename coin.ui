@@ -163,6 +163,13 @@
              </spacer>
             </item>
             <item>
+             <widget class="QCheckBox" name="checkBox">
+              <property name="text">
+               <string>감시 여부</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="pushButton">
               <property name="text">
                <string>start</string>

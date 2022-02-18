@@ -32,12 +32,19 @@ class MyWindow(QMainWindow, form_class):
         # self.pushButton.clicked.connect(self.start.search_routine)
         self.pushButton.clicked.connect(self.ButtonstartPush)
 
-        # QComboBox upload 하고 아이템 선택시 이벤트
+        # QComboBox upload 하고 아이템 선택시 이벤트 (코인명, 차트유형, 봉개수)
         self.coin_list_upload()
         self.coin_list_cbox.currentIndexChanged.connect(self.coin_choice)
+        self.coin_list_cbox_2.currentIndexChanged.connect(self.coin_choice)
+        self.coin_list_cbox_3.currentIndexChanged.connect(self.coin_choice)
 
 
     def timeout(self):
+        # 1초에 1개씩 코인 확인
+        if self.checkBox.isChecked():
+            self.start.search_routine()
+
+        # 맨아래 시간표시
         current_time = QTime.currentTime()
 
         text_time = current_time.toString("hh:mm:ss")
