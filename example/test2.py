@@ -1,164 +1,60 @@
-# {
-#   "access_key": "발급 받은 acccess key (필수)",
-#   "nonce": "무작위의 UUID 문자열 (필수)",
-#   "query_hash": "해싱된 query string (파라미터가 있을 경우 필수)",
-#   "query_hash_alg": "query_hash를 생성하는 데에 사용한 알고리즘 (기본값 : SHA512)"
-# }
-#
-# # 입력없는요청
-# import jwt   # PyJWT
-# import uuid
-#
-# payload = {
-#     'access_key': '발급받은 Access Key',
-#     'nonce': str(uuid.uuid4()),
-# }
-#
-# jwt_token = jwt.encode(payload, '발급받은 Secret Key')
-# authorization_token = 'Bearer {}'.format(jwt_token)
-#
-# # --------------------------------------------------------
-#
-# # 입력있는 요청
-# import jwt  # PyJWT
-# import uuid
-# import hashlib
-# from urllib.parse import urlencode
-#
-# # query는 dict 타입입니다.
-# m = hashlib.sha512()
-# m.update(urlencode(query).encode())
-# query_hash = m.hexdigest()
-#
-# payload = {
-#     'access_key': '발급받은 Access Key',
-#     'nonce': str(uuid.uuid4()),
-#     'query_hash': query_hash,
-#     'query_hash_alg': 'SHA512',
-# }
-#
-# jwt_token = jwt.encode(payload, '발급받은 Secret Key')
-# authorization_token = 'Bearer {}'.format(jwt_token)
-
-# ----------------------------------------------------------------
-
-# 전체 계좌조회
-import os
+from PyQt5 import QtCore, QtWidgets, QtWebEngineWidgets
+import plotly.express as px
+import json
 import time
 
-# import jwt
-# import uuid
-# import hashlib
-# from urllib.parse import urlencode
-#
-# import requests
-# import threading
-# import time
-#
-# def account_loop():
-#     while(True):
-#         time.sleep(5)
-#         access_key = 'ySWg8zG5UTmuP0mEZuAdwNNCah2Lt8F6qLQckwcM'
-#         secret_key = 'LOXTJLbJ08ckNwj0Z3Zu5SPpcjynEPTTvpv9zAXw'
-#         server_url = 'https://api.upbit.com'
-#
-#         payload = {
-#             'access_key': access_key,
-#             'nonce': str(uuid.uuid4()),
-#         }
-#
-#         jwt_token = jwt.encode(payload, secret_key)
-#         authorize_token = 'Bearer {}'.format(jwt_token)
-#         headers = {"Authorization": authorize_token}
-#
-#         res = requests.get(server_url + "/v1/accounts", headers=headers)
-#
-#         print(res.json())
-#
-# def test_loop():
-#     while (True):
-#         print('a')
-#         time.sleep(2)
-#
-# threading.Thread(target=account_loop).start()
-# threading.Thread(target=test_loop()).start()
-
-# -----------------------------------------------------------------------------
-
-# 실시간 데이터 받기
-# import websockets
-# import asyncio
-# import json
-#
-# async def upbit_websocket():
-#     async with websockets.connect("wss://api.upbit.com/websocket/v1", ping_interval=None) as wb:
-#         await wb.send('[{"ticket":"test"},{"type":"trade","codes":["KRW-BTC","BTC-BCH"]},{"format":"SIMPLE"}]')
-#         while(True):
-#             result = await wb.recv()
-#             print(json.loads(result))
-#
-# loop = asyncio.get_event_loop()
-# asyncio.ensure_future(upbit_websocket())
-# loop.run_forever()
-
-# 2번째방법
-# import websockets
-# import asyncio
-# import json
-#
-# async def upbit_websocket():
-#     websocket = await websockets.connect("wss://api.upbit.com/websocket/v1", ping_interval=None)
-#     await websocket.send(json.dumps([{"ticket":"test"},{"type":"trade","codes":["KRW-BTC","BTC-BCH"]},{"format":"SIMPLE"}]))
-#
-#     while True:
-#         if websocket.open:
-#             result = await websocket.recv()
-#             print(json.loads(result))
-#         else:
-#             print('disconnect')
-#
-# loop = asyncio.get_event_loop()
-# asyncio.ensure_future(upbit_websocket())
-# loop.run_forever()
-
-# -----------------------------------------------------------------------
-
-# 주문
-
-import os
-import jwt
-import uuid
-import hashlib
-from urllib.parse import urlencode
-
 import requests
+import plotly.graph_objects as go
+import matplotlib.ticker as ticker
+import matplotlib.pyplot as plt
+from datetime import datetime
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-access_key = 'ySWg8zG5UTmuP0mEZuAdwNNCah2Lt8F6qLQckwcM'
-secret_key = 'LOXTJLbJ08ckNwj0Z3Zu5SPpcjynEPTTvpv9zAXw'
-server_url = 'https://api.upbit.com'
+# coin 차트 데이터 불러오기
+from pandas.io.json import json_normalize
 
-query = {
-    'market': 'KRW-BTC',
-    'side': 'bid',
-    'volume': '0.01',
-    'price': '100.0',
-    'ord_type': 'limit',
-}
-query_string = urlencode(query).encode()
 
-m = hashlib.sha512()
-m.update(query_string)
-query_hash = m.hexdigest()
+class Widget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.button = QtWidgets.QPushButton('Plot', self)
+        self.browser = QtWebEngineWidgets.QWebEngineView(self)
+        vlayout = QtWidgets.QVBoxLayout(self)
+        vlayout.addWidget(self.button, alignment=QtCore.Qt.AlignHCenter)
+        vlayout.addWidget(self.browser)
+        self.button.clicked.connect(self.show_graph)
+        self.resize(1000,800)
 
-payload = {
-    'access_key': access_key,
-    'nonce': str(uuid.uuid4()),
-    'query_hash': query_hash,
-    'query_hash_alg': 'SHA512',
-}
+    def show_graph(self):
+        headers = {"Accept": "application/json"}
 
-jwt_token = jwt.encode(payload, secret_key)
-authorize_token = 'Bearer {}'.format(jwt_token)
-headers = {"Authorization": authorize_token}
+        response = requests.request("GET", "https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=100",
+                                    headers=headers)
+        response = json.loads(response.text)
+        response = json.dumps(response)
+        print(response.json())
+        df = json_normalize(response.json())  # Results contain the required data
+        print(df)
 
-res = requests.post(server_url + "/v1/orders", params=query, headers=headers)
+        stock_name = '비트코인'
+
+        fig = go.Figure(data=[go.Candlestick(x=df['candle_date_time_kst'],
+                                             open=df['opening_price'],
+                                             high=df['high_price'],
+                                             low=df['low_price'],
+                                             close=df['trade_price'])])
+        # x축 type을 카테고리 형으로 설정, 순서를 오름차순으로 날짜순서가 되도록 설정
+        fig.layout = dict(title=stock_name,
+                          xaxis=dict(type="category",
+                                     categoryorder='category ascending'))
+        fig.update_xaxes(nticks=5)
+        self.browser.setHtml(fig.to_html(include_plotlyjs='cdn'))
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+    widget = Widget()
+    widget.show()
+    app.exec()

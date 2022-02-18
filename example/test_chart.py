@@ -1,4 +1,6 @@
 import json
+import time
+
 import requests
 import plotly.graph_objects as go
 import matplotlib.ticker as ticker
@@ -6,6 +8,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # coin 차트 데이터 불러오기
 from pandas.io.json import json_normalize
@@ -30,4 +33,11 @@ fig.layout = dict(title=stock_name,
                        xaxis = dict(type="category",
                                     categoryorder='category ascending'))
 fig.update_xaxes(nticks=5)
+fig.write_image('11_plotly.png')
 fig.show()
+
+from PIL import Image
+
+image = Image.open("../11_plotly.png")
+
+image.show()

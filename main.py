@@ -1,13 +1,16 @@
 import sys
 import pyupbit
-import json
 from PyQt5 import uic
+from PyQt5 import QtCore, QtGui, QtWidgets
+from pandas.io.json import json_normalize
+import pandas as pd
 from core.upload_data import Get_data
 from core.base_searching import Strainer
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import math
-import time
+import json
+import plotly.graph_objects as go
+
 form_class = uic.loadUiType("coin.ui")[0]
 
 class MyWindow(QMainWindow, form_class):
@@ -25,11 +28,6 @@ class MyWindow(QMainWindow, form_class):
         self.timer = QTimer(self)
         self.timer.start(1000)
         self.timer.timeout.connect(self.timeout)
-
-        # 상태바 타이머
-        self.timer2 = QTimer(self)
-        self.timer2.start(5000)
-        self.timer2.timeout.connect(self.timeout2)
 
         # self.pushButton.clicked.connect(self.start.search_routine)
         self.pushButton.clicked.connect(self.ButtonstartPush)
@@ -53,6 +51,21 @@ class MyWindow(QMainWindow, form_class):
     def coin_choice(self):
         coin = self.coin_list_cbox.currentText()
         self.notice_2.append(coin)
+
+        # 차트 업로드
+        df = self.gd.candle_data_rest('days', coin, 100, low=1)
+        df = pd.json_normalize(df.json())  # Results contain the required data
+        fig = go.Figure(data=[go.Candlestick(x=df['candle_date_time_kst'],
+                                             open=df['opening_price'],
+                                             high=df['high_price'],
+                                             low=df['low_price'],
+                                             close=df['trade_price'])])
+        # x축 type을 카테고리 형으로 설정, 순서를 오름차순으로 날짜순서가 되도록 설정
+        fig.layout = dict(title=coin,
+                          xaxis=dict(type="category",
+                                     categoryorder='category ascending'))
+        fig.update_xaxes(nticks=5)
+        self.webEngineView.setHtml(fig.to_html(include_plotlyjs='cdn'))
 
     def coin_list_upload(self):
         for i in range(len(self.start.market_coin)):
@@ -91,8 +104,13 @@ class MyWindow(QMainWindow, form_class):
 
     # 일단 모든 코인 현재가 tablewidget에 표시
     def ButtonstartPush(self):
+        # 상태바 타이머
+        self.timer2 = QTimer(self)
+        self.timer2.start(5000)
+        self.timer2.timeout.connect(self.timeout2)
+
         self.MyWalletLoading()
-        self.gd = Get_data()
+
         tickers = self.gd.coin_name_loading() #list 타입
         prices_KRW =  pyupbit.get_current_price(tickers) # dict 타입 /  나 이거 밖에서 어떻게 들고오는지 모르겠음
         prices = list(prices_KRW.values())

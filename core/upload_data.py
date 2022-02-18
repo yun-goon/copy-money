@@ -3,12 +3,16 @@ import jwt
 import uuid
 import hashlib
 from urllib.parse import urlencode
+
+from pandas.io.json import json_normalize
+
 import privacy as pr
 import pandas as pd
 import requests
 import websockets
 import asyncio
 import json
+import requests
 
 
 class Get_data():
@@ -112,7 +116,7 @@ class Get_data():
 
 
     # coin 차트 데이터 불러오기
-    def candle_data_rest(self, type, market, count):
+    def candle_data_rest(self, type, market, count, low = 0):
         '''
 
         :param type: days , minutes/1,2,3,10 , weeks , months
@@ -136,6 +140,9 @@ class Get_data():
         headers = {"Accept": "application/json"}
 
         response = requests.request("GET", url, headers=headers)
+
+        if low:
+            return response
 
         return json.loads(response.text)
 
