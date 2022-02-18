@@ -7,37 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>1601</width>
-    <height>723</height>
+    <height>753</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="0">
        <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="font">
-             <font>
-              <family>휴먼둥근헤드라인</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>코인 List</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="coin_list_cbox"/>
-          </item>
-         </layout>
-        </item>
         <item>
          <widget class="QLabel" name="label">
           <property name="font">
@@ -55,7 +36,7 @@
           <property name="minimumSize">
            <size>
             <width>379</width>
-            <height>293</height>
+            <height>323</height>
            </size>
           </property>
           <column>
@@ -94,7 +75,7 @@
             <property name="minimumSize">
              <size>
               <width>377</width>
-              <height>268</height>
+              <height>298</height>
              </size>
             </property>
             <column>
@@ -137,7 +118,7 @@
           <property name="minimumSize">
            <size>
             <width>378</width>
-            <height>308</height>
+            <height>323</height>
            </size>
           </property>
          </widget>
@@ -161,7 +142,7 @@
             <property name="minimumSize">
              <size>
               <width>376</width>
-              <height>0</height>
+              <height>261</height>
              </size>
             </property>
            </widget>
@@ -196,8 +177,106 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <family>휴먼둥근헤드라인</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>코인 List</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="coin_list_cbox"/>
+        </item>
+        <item>
+         <widget class="QComboBox" name="coin_list_cbox_2">
+          <item>
+           <property name="text">
+            <string>days</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>weeks</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>months</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>60</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>휴먼둥근헤드라인</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>개수</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="coin_list_cbox_3">
+          <item>
+           <property name="text">
+            <string>10</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>50</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>100</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>200</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>300</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item>
        <widget class="QLabel" name="label_5">
         <property name="font">

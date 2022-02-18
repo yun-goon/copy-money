@@ -135,7 +135,7 @@ class Get_data():
         elif type == 'months':
             url = f"https://api.upbit.com/v1/candles/months?market={market}&count={count}" #month
         elif type.isdigit():
-            url = f"https://api.upbit.com/v1/candles/minutes/{type}?market={market['market']}&count={count}"  # min
+            url = f"https://api.upbit.com/v1/candles/minutes/{type}?market={market}&count={count}"  # min
 
         headers = {"Accept": "application/json"}
 

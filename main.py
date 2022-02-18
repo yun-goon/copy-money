@@ -49,11 +49,16 @@ class MyWindow(QMainWindow, form_class):
         self.ButtonstartPush()
 
     def coin_choice(self):
+        '''
+        type, market, count
+        '''
         coin = self.coin_list_cbox.currentText()
+        type = self.coin_list_cbox_2.currentText()
+        count = self.coin_list_cbox_3.currentText()
         self.notice_2.append(coin)
 
         # 차트 업로드
-        df = self.gd.candle_data_rest('days', coin, 100, low=1)
+        df = self.gd.candle_data_rest(type, coin, int(count), low=1)
         df = pd.json_normalize(df.json())  # Results contain the required data
         fig = go.Figure(data=[go.Candlestick(x=df['candle_date_time_kst'],
                                              open=df['opening_price'],
