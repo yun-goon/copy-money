@@ -29,6 +29,11 @@ class MyWindow(QMainWindow, form_class):
         self.timer.start(1000)
         self.timer.timeout.connect(self.timeout)
 
+        # 5초 타이머
+        self.timer2 = QTimer(self)
+        self.timer2.start(5000)
+        self.timer2.timeout.connect(self.timeout2)
+
         # self.pushButton.clicked.connect(self.start.search_routine)
         self.pushButton.clicked.connect(self.ButtonstartPush)
 
@@ -41,8 +46,8 @@ class MyWindow(QMainWindow, form_class):
 
     def timeout(self):
         # 1초에 1개씩 코인 확인
-        if self.checkBox.isChecked():
-            self.start.search_routine()
+        if self.checkBox.isChecked():      # 감시여부 체크시
+            self.start.search_routine()    # 코인 1개 검사
 
         # 맨아래 시간표시
         current_time = QTime.currentTime()
@@ -53,7 +58,8 @@ class MyWindow(QMainWindow, form_class):
         self.statusbar.showMessage(time_msg + " | Yun & Kim")
 
     def timeout2(self):
-        self.ButtonstartPush()
+        if self.checkBox.isChecked():       # 감시여부 체크시
+            self.ButtonstartPush()          # 5초마다 버튼 누른효과
 
     def coin_choice(self):
         '''
@@ -65,9 +71,9 @@ class MyWindow(QMainWindow, form_class):
         self.notice_2.append(coin)
 
         # 차트 업로드
-        df = self.gd.candle_data_rest(type, coin, int(count), low=1)
-        df = pd.json_normalize(df.json())  # Results contain the required data
-        fig = go.Figure(data=[go.Candlestick(x=df['candle_date_time_kst'],
+        df = self.gd.candle_data_rest(type, coin, int(count), low=1)                # json 그대로 가져오기
+        df = pd.json_normalize(df.json())  # Results contain the required data      # 준비
+        fig = go.Figure(data=[go.Candlestick(x=df['candle_date_time_kst'],          # 데이터 넣기
                                              open=df['opening_price'],
                                              high=df['high_price'],
                                              low=df['low_price'],
@@ -75,10 +81,11 @@ class MyWindow(QMainWindow, form_class):
         # x축 type을 카테고리 형으로 설정, 순서를 오름차순으로 날짜순서가 되도록 설정
         fig.layout = dict(title=coin,
                           xaxis=dict(type="category",
-                                     categoryorder='category ascending'))
-        fig.update_xaxes(nticks=5)
-        self.webEngineView.setHtml(fig.to_html(include_plotlyjs='cdn'))
+                                     categoryorder='category ascending'))           # 어떻게 보일지 설정
+        fig.update_xaxes(nticks=5)                                                  # x축 5단위 표시
+        self.webEngineView.setHtml(fig.to_html(include_plotlyjs='cdn'))             # ui에 표시
 
+    # 코인 이름을 ui에 표시
     def coin_list_upload(self):
         for i in range(len(self.start.market_coin)):
             self.coin_list_cbox.addItem(self.start.market_coin[i]['market'])
@@ -116,10 +123,6 @@ class MyWindow(QMainWindow, form_class):
 
     # 일단 모든 코인 현재가 tablewidget에 표시
     def ButtonstartPush(self):
-        # 상태바 타이머
-        self.timer2 = QTimer(self)
-        self.timer2.start(5000)
-        self.timer2.timeout.connect(self.timeout2)
 
         self.MyWalletLoading()
 
