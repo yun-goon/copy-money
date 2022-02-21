@@ -12,11 +12,10 @@ import privacy as pr
 
 from urllib.parse import urlencode
 from decimal import Decimal
-from datetime import datetime
 
 # Keys
 access_key = pr.access_key
-secret_key = pr.access_key
+secret_key = pr.secret_key
 server_url = 'https://api.upbit.com'
 
 # 상수 설정
@@ -126,7 +125,6 @@ def send_request(reqType, reqUrl, reqParam, reqHeader):
             else:
                 logging.error("기타 에러:" + str(response.status_code))
                 logging.error(response.status_code)
-                logging.error(response)
                 break
 
             # 요청 가능회수 초과 에러 발생시에는 다시 요청
@@ -668,8 +666,6 @@ def get_krwbal():
 
         data = res.json()
 
-        logging.debug(data)
-
         for dataFor in data:
             if (dataFor['currency']) == "KRW":
                 krw_balance = math.floor(Decimal(str(dataFor['balance'])))
@@ -815,8 +811,6 @@ def get_ticker(target_itemlist):
 
         querystring = {"markets": target_itemlist}
         response = send_request("GET", url, querystring, "")
-
-        logging.info(response)
         rtn_data = response.json()
 
         return rtn_data
@@ -923,49 +917,6 @@ def get_order(target_item):
         query = {
             'market': target_item,
             'state': 'wait',
-        }
-
-        query_string = urlencode(query).encode()
-
-        m = hashlib.sha512()
-        m.update(query_string)
-        query_hash = m.hexdigest()
-
-        payload = {
-            'access_key': access_key,
-            'nonce': str(uuid.uuid4()),
-            'query_hash': query_hash,
-            'query_hash_alg': 'SHA512',
-        }
-
-        jwt_token = jwt.encode(payload, secret_key)
-        authorize_token = 'Bearer {}'.format(jwt_token)
-        headers = {"Authorization": authorize_token}
-
-        res = send_request("GET", server_url + "/v1/orders", query, headers)
-        rtn_data = res.json()
-
-        return rtn_data
-
-    # ----------------------------------------
-    # 모든 함수의 공통 부분(Exception 처리)
-    # ----------------------------------------
-    except Exception:
-        raise
-
-
-# -----------------------------------------------------------------------------
-# - Name : get_order
-# - Desc : 미체결 주문 조회
-# - Input
-#   1) side : 주문상태
-# - Output
-#   1) 주문 내역 리스트
-# -----------------------------------------------------------------------------
-def get_order_list(side):
-    try:
-        query = {
-            'state': side,
         }
 
         query_string = urlencode(query).encode()
@@ -1545,13 +1496,8 @@ def get_williams(candle_datas):
 def get_cci(candle_data, loop_cnt):
     try:
 
-        cci_val = 20
-
         # CCI 데이터 리턴용
         cci_list = []
-
-        # 사용하지 않는 캔들 갯수 정리(속도 개선)
-        del candle_data[cci_val * 2:]
 
         # 오름차순 정렬
         df = pd.DataFrame(candle_data)
@@ -1559,8 +1505,8 @@ def get_cci(candle_data, loop_cnt):
 
         # 계산식 : (Typical Price - Simple Moving Average) / (0.015 * Mean absolute Deviation)
         ordered_df['TP'] = (ordered_df['high_price'] + ordered_df['low_price'] + ordered_df['trade_price']) / 3
-        ordered_df['SMA'] = ordered_df['TP'].rolling(window=cci_val).mean()
-        ordered_df['MAD'] = ordered_df['TP'].rolling(window=cci_val).apply(lambda x: pd.Series(x).mad())
+        ordered_df['SMA'] = ordered_df['TP'].rolling(window=20).mean()
+        ordered_df['MAD'] = ordered_df['TP'].rolling(window=20).apply(lambda x: pd.Series(x).mad())
         ordered_df['CCI'] = (ordered_df['TP'] - ordered_df['SMA']) / (0.015 * ordered_df['MAD'])
 
         # 개수만큼 조립

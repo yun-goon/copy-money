@@ -21,14 +21,7 @@ min_order_amt = 5000
 
 # UPBIT URL
 server_url = 'https://api.upbit.com'
-ws_url = 'wss://api.upbit.com/websocket/v1'
 
-# 오라클 DB 관련
-os.environ['TNS_ADMIN'] = "/usr/lib/oracle/21/client64/lib/network/admin"
-os.environ["NLS_LANG"] = ".UTF8"
-
-# LINE MESSENGER URL
-line_target_url = 'https://notify-api.line.me/api/notify'
 
 
 # -----------------------------------------------------------------------------
@@ -1871,31 +1864,6 @@ def get_max(candle_data, col_name_high, col_name_low):
         raise
 
 
-# -----------------------------------------------------------------------------
-# - Name : send_line_msg
-# - Desc : 라인 메세지 전송
-# - Input
-#   1) message : 메세지
-# - Output
-#   1) response : 발송결과(200:정상)
-# -----------------------------------------------------------------------------
-def send_line_message(message):
-    try:
-        headers = {'Authorization': 'Bearer ' + get_env_keyvalue('line_token')}
-        data = {'message': message}
-
-        response = requests.post(line_target_url, headers=headers, data=data)
-
-        logging.debug(response)
-
-        return response
-
-    # ----------------------------------------
-    # 모든 함수의 공통 부분(Exception 처리)
-    # ----------------------------------------
-    except Exception:
-        raise
-
 
 # -----------------------------------------------------------------------------
 # - Name : get_indicator_sel
@@ -1974,82 +1942,6 @@ def get_indicator_sel(target_item, tick_kind, inq_range, loop_cnt, indi_type):
         raise
 
 
-# -----------------------------------------------------------------------------
-# - Name : send_msg
-# - Desc : 메세지 전송
-# - Input
-#   1) sent_list : 메세지 발송 내역
-#   2) key : 메세지 키
-#   3) contents : 메세지 내용
-#   4) msg_intval : 메세지 발송주기
-# - Output
-#   1) sent_list : 메세지 발송 내역
-# -----------------------------------------------------------------------------
-def send_msg(sent_list, key, contents, msg_intval):
-    try:
-
-        # msg_intval = 'N' 이면 메세지 발송하지 않음
-        if msg_intval.upper() != 'N':
-
-            # 발송여부 체크
-            sent_yn = False
-
-            # 발송이력
-            sent_dt = ''
-
-            # 발송내역에 해당 키 존재 시 발송 이력 추출
-            for sent_list_for in sent_list:
-                if key in sent_list_for.values():
-                    sent_yn = True
-                    sent_dt = datetime.strptime(sent_list_for['SENT_DT'], '%Y-%m-%d %H:%M:%S')
-
-            # 기 발송 건
-            if sent_yn:
-
-                logging.info('기존 발송 건')
-
-                # 현재 시간 추출
-                current_dt = datetime.strptime(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
-
-                # 시간 차이 추출
-                diff = current_dt - sent_dt
-
-                # 발송 시간이 지난 경우에는 메세지 발송
-                if diff.seconds >= int(msg_intval):
-
-                    logging.info('발송 주기 도래 건으로 메시지 발송 처리!')
-
-                    # 메세지 발송
-                    send_line_message(contents)
-
-                    # 기존 메시지 발송이력 삭제
-                    for sent_list_for in sent_list[:]:
-                        if key in sent_list_for.values():
-                            sent_list.remove(sent_list_for)
-
-                    # 새로운 발송이력 추가
-                    sent_list.append({'KEY': key, 'SENT_DT': datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
-
-                else:
-                    logging.info('발송 주기 미 도래 건!')
-
-            # 최초 발송 건
-            else:
-                logging.info('최초 발송 건')
-
-                # 메세지 발송
-                send_line_message(contents)
-
-                # 새로운 발송이력 추가
-                sent_list.append({'KEY': key, 'SENT_DT': datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
-
-        return sent_list
-
-    # ----------------------------------------
-    # 모든 함수의 공통 부분(Exception 처리)
-    # ----------------------------------------
-    except Exception:
-        raise
 
 
 # -----------------------------------------------------------------------------
@@ -2067,15 +1959,15 @@ def read_file(name):
 
         path = './conf/' + str(name) + '.txt'
 
-        f = open(path, 'r', encoding='UTF8')
-        lines = f.read().splitlines()
+        f = open(path, 'r', encoding='UTF8') #파일 열고 읽기('r') 모드
+        lines = f.read().splitlines() #내용 불러오기
         f.close()
 
         for line in lines:
-            txt_to_dict = literal_eval(line)
-            file_to_listofdict.append(txt_to_dict)
+            txt_to_dict = literal_eval(line) # 문자열을 딕셔너리로
+            file_to_listofdict.append(txt_to_dict)  # 리스트에 추가
 
-        return file_to_listofdict
+        return file_to_listofdict # 반환
 
     # ----------------------------------------
     # 모든 함수의 공통 부분(Exception 처리)
@@ -2083,7 +1975,7 @@ def read_file(name):
     except FileNotFoundError:
         logging.info('파일이 존재하지 않습니다! 파일을 생성합니다. 파일명[' + str(name) + '.txt]')
 
-        with open(path, "w", encoding="utf-8") as f:
+        with open(path, "w", encoding="utf-8") as f: #파일없을때는 생성
             f.close()
 
         logging.info('파일 생성 완료. 파일명[' + str(name) + '.txt]')
@@ -2092,27 +1984,6 @@ def read_file(name):
     except Exception:
         raise
 
-
-# -----------------------------------------------------------------------------
-# - Name : send_telegram_msg
-# - Desc : 텔레그램 메세지 전송
-# - Input
-#   1) message : 메세지
-# -----------------------------------------------------------------------------
-def send_telegram_message(message):
-    try:
-        # 텔레그램 메세지 발송
-        bot = telegram.Bot(get_env_keyvalue('telegram_token'))
-        res = bot.sendMessage(chat_id=get_env_keyvalue('telegram_id'), text=message)
-
-        return res
-
-    # ----------------------------------------
-    # 모든 함수의 공통 부분(Exception 처리)
-    # ----------------------------------------
-    except Exception:
-        raise
-    
 
 # -----------------------------------------------------------------------------
 # - Name : write_config

@@ -1,6 +1,5 @@
 import json
 import time
-
 import requests
 import plotly.graph_objects as go
 import matplotlib.ticker as ticker

@@ -20,7 +20,7 @@ class MyWindow(QMainWindow, form_class):
         self.gd = Get_data() #upload_data를 gd로 바꿈
 
         self.start = Strainer() # base_searching을 start로
-        self.price_list={}
+
 
         self.notice_2.append('프로그램 시작')
 

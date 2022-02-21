@@ -28,13 +28,13 @@ query_url = 'https://upbit.com/service_center/notice?id='
 def mon_notice():
     try:
 
-        while True:
-            logging.info('업비트 공지사항 크롤링 중...')
+        while True:  # 반복설정
+            logging.info('업비트 공지사항 크롤링 중...')  #로그 하나 띄우고
 
             test = []
 
-            response = requests.get(page_url, headers=headers)
-            upbit_notice = response.json()
+            response = requests.get(page_url, headers=headers) #추출
+            upbit_notice = response.json() # json 형식으로
 
             for notice in upbit_notice['data']['list']:
 
@@ -45,19 +45,21 @@ def mon_notice():
 
 
 
-                tmp_notice = {'title': title, 'dt': dt, 'article_no': article_no}
+                tmp_notice = {'title': title, 'dt': dt, 'article_no': article_no} #합체
 
                 # 기존 공지사항 목록 조회
-                prev_notice_list = upbit.read_file(pgm_name)
+                prev_notice_list = upbit.read_file(pgm_name) # pgm_name 메모장에 저장된거 리스트 형식으로 들고옴
 
                 # 기존 공지내역이 있으면 비교하기
                 if len(prev_notice_list) > 0:
                     # 기존 공지내역이 있으면 PASS
                     # and len(list(filter(lambda x: x['dt'] == dt, prev_notice_list))) > 0 \
+                    #https://blog.naver.com/star7sss/222275439291 람다에 대하여
                     if len(list(filter(lambda x: x['title'] == title, prev_notice_list))) > 0 \
                             and len(list(filter(lambda x: x['article_no'] == article_no, prev_notice_list))) > 0:
+                        # x는 prev_notice_list의 리스트에서 title 이 title을 만족할때
                         logging.info('기존 공지내역이 있음!')
-                        logging.info(tmp_notice)
+                        logging.info(tmp_notice) # 제목 로그로 띄움
 
                     else:
 
@@ -74,10 +76,6 @@ def mon_notice():
                             print(title_main)
                             test.append(title_main)
 
-
-
-
-                        # print(type(msg_contents))  #  str타입
 
                         # 메세지 발송
                         #upbit.send_telegram_message(msg_contents)
