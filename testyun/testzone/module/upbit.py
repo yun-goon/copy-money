@@ -1042,6 +1042,7 @@ def get_rsi(target_item, tick_kind, inq_range):
         candle_data = get_candle(target_item, tick_kind, inq_range)
 
         df = pd.DataFrame(candle_data)
+        # reindex : 다시정렬
         df = df.reindex(index=df.index[::-1]).reset_index()
 
         df['close'] = df["trade_price"]
@@ -1049,7 +1050,7 @@ def get_rsi(target_item, tick_kind, inq_range):
         # RSI 계산
         def rsi(ohlc: pd.DataFrame, period: int = 14):
             ohlc["close"] = ohlc["close"]
-            delta = ohlc["close"].diff()
+            delta = ohlc["close"].diff() #diff 는 값 간의 차이를 구함
 
             up, down = delta.copy(), delta.copy()
             up[up < 0] = 0
@@ -1058,10 +1059,10 @@ def get_rsi(target_item, tick_kind, inq_range):
             _gain = up.ewm(com=(period - 1), min_periods=period).mean()
             _loss = down.abs().ewm(com=(period - 1), min_periods=period).mean()
 
-            RS = _gain / _loss
+            RS = _gain / _loss # N일간의 상승폭의 평균/ N일간의 하락폭의 평균
             return pd.Series(100 - (100 / (1 + RS)), name="RSI")
 
-        rsi = round(rsi(df, 14).iloc[-1], 4)
+        rsi = round(rsi(df, 14).iloc[-1], 4)  #round 반올림함수, iloc 인덱싱
 
         return rsi
 

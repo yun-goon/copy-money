@@ -27,12 +27,12 @@ class MyWindow(QMainWindow, form_class):
         # 상태바 타이머
         self.timer = QTimer(self)
         self.timer.start(1000)
-        self.timer.timeout.connect(self.timeout)
+        self.timer.timeout.connect(self.timeout) #timer를 timeout에 열결
 
         # 5초 타이머
         self.timer2 = QTimer(self)
         self.timer2.start(5000)
-        self.timer2.timeout.connect(self.timeout2)
+        self.timer2.timeout.connect(self.timeout2) # timer2를 timeout2에 연결
 
         # self.pushButton.clicked.connect(self.start.search_routine)
         self.pushButton.clicked.connect(self.ButtonstartPush)
@@ -93,7 +93,7 @@ class MyWindow(QMainWindow, form_class):
     def MyWalletLoading(self):
         wallet = self.gd.get_wallet()
         walletDict = json.loads(wallet.text)
-        del walletDict[0] # KRW 값 삭제
+        del walletDict[0] # KRW_KRW 값 삭제
         list_currency = [] # 보유 코인 이름 목록
         list_now_cost = [] # 보유 코인의 현재 가격 목록
         list_return = [] # 수익률 목록
@@ -126,9 +126,9 @@ class MyWindow(QMainWindow, form_class):
 
         self.MyWalletLoading()
 
-        tickers = self.gd.coin_name_loading() #list 타입
+        tickers = self.gd.coin_name_loading() #list 타입, 코인이름 불러오기
         prices_KRW =  pyupbit.get_current_price(tickers) # dict 타입 /  나 이거 밖에서 어떻게 들고오는지 모르겠음
-        prices = list(prices_KRW.values())
+        prices = list(prices_KRW.values()) #리스트 타입으로 변환
         self.coinlist.setRowCount(len(tickers)) # ui 몇줄일지설정
 
         for i, ticker in enumerate(tickers):
