@@ -257,7 +257,7 @@
          <widget class="QComboBox" name="coin_list_cbox_3">
           <item>
            <property name="text">
-            <string>10</string>
+            <string>30</string>
            </property>
           </item>
           <item>
@@ -272,12 +272,12 @@
           </item>
           <item>
            <property name="text">
-            <string>200</string>
+            <string>150</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>300</string>
+            <string>200</string>
            </property>
           </item>
          </widget>
