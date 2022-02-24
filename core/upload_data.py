@@ -2,10 +2,9 @@ import pyupbit
 import jwt
 import uuid
 import hashlib
-from urllib.parse import urlencode
-
-from pandas.io.json import json_normalize
-
+import sys
+import os
+import traceback
 import privacy as pr
 import pandas as pd
 import requests
@@ -13,6 +12,24 @@ import websockets
 import asyncio
 import json
 import requests
+import datetime
+
+from urllib.parse import urlencode
+from core import upbit
+from pandas.io.json import json_normalize
+
+# 공통 모듈 Import
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+# Program Name
+pgm_name = 'mon_notice'
+pgm_name_kr = '업비트 공지사항 크롤링'
+
+# Headers & Page URLs
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'}
+page_url = 'https://api-manager.upbit.com/api/v1/notices?page=1&per_page=20&thread_name=general'
+query_url = 'https://upbit.com/service_center/notice?id='
 
 
 class Get_data():
@@ -170,3 +187,20 @@ class Get_data():
     # 실시간 체결데이터 수신시 action   -> 코딩 필요
     def trade_data_action(self, data):
         print(data)
+
+
+    def load_indicator(self,target_item, tick_kind, inq_range, loop_cnt, list):
+        upbit.set_loglevel('I')
+
+        indicators = upbit.get_indicator_sel(target_item, tick_kind, inq_range, loop_cnt, list)
+
+        return indicators
+
+    def load_all_indicator(self, target_item, tick_kind, inq_range, loop_cnt):
+
+        indicator_data = upbit.get_indicators(target_item, tick_kind, inq_range, loop_cnt)
+        #print(type(indicator_data))  # list 타입
+
+        return indicator_data
+
+

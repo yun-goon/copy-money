@@ -29,8 +29,11 @@ if __name__ == '__main__':
         # 보지지표 조회
         indicator_data = upbit.get_indicators('KRW-BTC', '30', '200', 2)
 
+        print(type(indicator_data)) #list 타입
+
         for indicator_data_for in indicator_data:
             logging.info(indicator_data_for)
+
 
     except KeyboardInterrupt:
         logging.error("KeyboardInterrupt Exception 발생!")

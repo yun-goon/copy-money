@@ -1,11 +1,14 @@
 import time
 import sys
+import logging
+from decimal import Decimal
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from multiprocessing import Process, Queue
 import multiprocessing as mp
 from core.upload_data import Get_data
 from core.smart_bot import *
+import core.upbit
 
 class Strainer():
     def __init__(self):
@@ -27,9 +30,25 @@ class Strainer():
             self.min_data = self.gd.candle_data_rest(type='1', market=self.market, count=30)
             self.day_data = self.gd.candle_data_rest(type='days', market=self.market, count=30)
 
+            target_item = self.market['market']
+            indicator_data = self.gd.load_all_indicator(target_item, '30', '200', 1)
+
+            target_items = core.upbit.get_items('KRW', '')
+
+
+
+
+
             # 여기서부터 조건 짜서 넣기
             if True:
-                print(self.market)
+                print(self.market) # 딕션 타입
+                print(type(indicator_data))
+                for indicator_data_for in indicator_data:
+                    print(indicator_data_for)
+
+                #for indicators in indicator:
+                #    print(indicators)
+
 
     # 다음 서칭코인 체크
     def search_routine(self):
