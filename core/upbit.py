@@ -1643,7 +1643,7 @@ def get_indicators(target_item, tick_kind, inq_range, loop_cnt):
                 candle_datas.append(candle_data[i:int(len(candle_data))])
 
             # RSI 정보 조회
-            rsi_data = get_rsi(candle_datas)
+            rsi_data = dict(get_rsi(candle_datas))
 
             # MFI 정보 조회
             mfi_data = get_mfi(candle_datas)

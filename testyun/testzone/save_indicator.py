@@ -26,19 +26,20 @@ if __name__ == '__main__':
 
             upbit.set_loglevel('I')
 
-            indicators = upbit.get_indicator_sel('KRW-BTC', 'D', 200, 100, ['RSI', 'MFI', 'MACD', 'WILLIAMS'])
+            indicators = upbit.get_indicator_sel('KRW-BTC', 'D', 200, 1, ['RSI', 'MFI', 'MACD', 'WILLIAMS'])
 
             # 보조지표 추출
             rsi_data = indicators['RSI']
             mfi_data = indicators['MFI']
             macd_data = indicators['MACD']
             williams_data = indicators['WILLIAMS']
+            print(type(rsi_data))
 
             # logging.info(rsi_data)
             #logging.info(mfi_data)
             # print(macd_data)
             # print(williams_data)
-            for i in range(0,100):
+            for i in range(0,1):
 
                 dt = rsi_data[i]['DT']
                 rsi = rsi_data[i]['RSI']
@@ -59,12 +60,15 @@ if __name__ == '__main__':
 
                 list.append(line)
 
+                print(list)
+                '''
                 df=pd.DataFrame(list, columns=list_index)
 
                 if not os.path.exists('indicator.csv'):
                     df.to_csv('indicator.csv', index=False, mode='w', encoding='utf-8-sig')
                 else:
                     df.to_csv('indicator.csv', index=False, mode='a', encoding='utf-8-sig', header=False)
+                '''
 
 
             # time.sleep(60)

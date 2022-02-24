@@ -31,10 +31,46 @@ class Strainer():
             self.day_data = self.gd.candle_data_rest(type='days', market=self.market, count=30)
 
             target_item = self.market['market']
-            indicator_data = self.gd.load_all_indicator(target_item, '30', '200', 1)
+            indicator_data = self.gd.load_indicator(target_item, '1', 200, 5, ['RSI', 'MFI', 'MACD', 'WILLIAMS', 'CANDLE'])
 
-            target_items = core.upbit.get_items('KRW', '')
+            #target_items = core.upbit.get_items('KRW', '').
 
+            rsi = indicator_data['RSI']
+            mfi = indicator_data['MFI']
+            macd = indicator_data['MACD']
+            williams = indicator_data['WILLIAMS']
+
+
+            rsi_val = False
+            mfi_val = False
+            ocl_val = False
+
+            if 'CANDLE' not in indicator_data or len(indicator_data['CANDLE']) < 200:
+                logging.info('캔들 데이터 부족으로 데이터 산출 불가...[' + str(target_item['market']) + ']')
+
+
+            if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                    and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                    and Decimal(str(rsi[2]['RSI'])) < Decimal(str(300))):
+                rsi_val = True
+                print(target_item,'rsi good')
+
+            if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) > Decimal(str(mfi[2]['MFI']))
+                    and Decimal(str(mfi[3]['MFI'])) > Decimal(str(mfi[2]['MFI']))
+                    and Decimal(str(mfi[2]['MFI'])) < Decimal(str(30))):
+                mfi_val = True
+                print(target_item,'mfi good')
+
+            if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))
+                    and Decimal(str(macd[3]['OCL'])) > Decimal(str(macd[2]['OCL']))
+                    and Decimal(str(macd[1]['OCL'])) < Decimal(str(0))
+                    and Decimal(str(macd[2]['OCL'])) < Decimal(str(0))
+                    and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
+                ocl_val = True
+                print(target_item,'ocl good')
+
+            if rsi_val and mfi_val and ocl_val:
+                print('대상 발견',target_item)
 
 
 
@@ -42,12 +78,7 @@ class Strainer():
             # 여기서부터 조건 짜서 넣기
             if True:
                 print(self.market) # 딕션 타입
-                print(type(indicator_data))
-                for indicator_data_for in indicator_data:
-                    print(indicator_data_for)
 
-                #for indicators in indicator:
-                #    print(indicators)
 
 
     # 다음 서칭코인 체크
