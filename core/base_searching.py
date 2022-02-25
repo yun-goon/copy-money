@@ -44,11 +44,18 @@ class Strainer():
             rsi_val = False
             mfi_val = False
             ocl_val = False
+            williams_val = False
 
             if 'CANDLE' not in indicator_data or len(indicator_data['CANDLE']) < 200:
                 logging.info('캔들 데이터 부족으로 데이터 산출 불가...[' + str(target_item['market']) + ']')
 
+            '''
+            print('rsi',rsi[0]['RSI'])
+            print('mfi',mfi[0]['MFI'])
+            print('macd',macd[0]['OCL'])
+            print('wiilams',williams[0]['W'])
 
+            '''
             if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
                     and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
                     and Decimal(str(rsi[2]['RSI'])) < Decimal(str(300))):
@@ -68,9 +75,17 @@ class Strainer():
                     and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
                 ocl_val = True
                 print(target_item,'ocl good')
+            
+            if (Decimal(str(williams[0]['W'])) > Decimal(str(williams[1]['W'])) > Decimal(str(williams[2]['W']))
+                    and Decimal(str(williams[3]['W'])) > Decimal(str(williams[2]['W']))
+                    and Decimal(str(williams[2]['W'])) < Decimal(str(-80))):
+                williams_val = True
+                print(target_item, 'williams good')
+            
 
-            if rsi_val and mfi_val and ocl_val:
+            if rsi_val and mfi_val and ocl_val and williams_val:
                 print('대상 발견',target_item)
+            
 
 
 
