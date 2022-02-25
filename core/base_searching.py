@@ -14,7 +14,7 @@ class Strainer():
     def __init__(self):
         self.gd = Get_data()
         # {'market': 'KRW-BTC', 'korean_name': '비트코인', 'english_name': 'Bitcoin'}
-        self.market_coin = self.gd.market_data()
+        self.market_coin = self.gd.coin_name_loading()
         self.cnt = 0
         self.len = len(self.market_coin)
 
@@ -30,7 +30,7 @@ class Strainer():
             self.min_data = self.gd.candle_data_rest(type='1', market=self.market, count=30)
             self.day_data = self.gd.candle_data_rest(type='days', market=self.market, count=30)
 
-            target_item = self.market['market']
+            target_item = self.market
             indicator_data = self.gd.load_indicator(target_item, '1', 200, 5, ['RSI', 'MFI', 'MACD', 'WILLIAMS', 'CANDLE'])
 
             #target_items = core.upbit.get_items('KRW', '').

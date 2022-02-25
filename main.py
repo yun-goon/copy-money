@@ -88,7 +88,7 @@ class MyWindow(QMainWindow, form_class):
     # 코인 이름을 ui에 표시
     def coin_list_upload(self):
         for i in range(len(self.start.market_coin)):
-            self.coin_list_cbox.addItem(self.start.market_coin[i]['market'])
+            self.coin_list_cbox.addItem(self.start.market_coin[i])
 
     def MyWalletLoading(self):
         wallet = self.gd.get_wallet()
@@ -126,7 +126,7 @@ class MyWindow(QMainWindow, form_class):
 
         self.MyWalletLoading()
 
-        tickers = self.gd.coin_name_loading() #list 타입, 코인이름 불러오기
+        tickers = self.start.market_coin #list 타입, 코인이름 불러오기
         prices_KRW =  pyupbit.get_current_price(tickers) # dict 타입 /  나 이거 밖에서 어떻게 들고오는지 모르겠음
         prices = list(prices_KRW.values()) #리스트 타입으로 변환
         self.coinlist.setRowCount(len(tickers)) # ui 몇줄일지설정
