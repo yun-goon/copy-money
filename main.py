@@ -1,5 +1,9 @@
-import sys
 import pyupbit
+import os
+import sys
+import time
+import logging
+import requests
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pandas.io.json import json_normalize
@@ -10,8 +14,30 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import json
 import plotly.graph_objects as go
+from multiprocessing import Process, Queue
+import multiprocessing as mp
 
 form_class = uic.loadUiType("coin.ui")[0]
+
+# 스택 받아올 함수실행 클래스 -----> 앞서 만들었던 것들 여기로 옮기기
+class Sub_main():
+    def __init__(self, q):
+        self.gd = Get_data()  # upload_data를 gd로 바꿈
+        self.gd.producer(q)
+
+# 스택 받아오는곳 분류해서 메인 ui로 데이터보냄
+class Get_stack(QThread):
+    poped = pyqtSignal(str)
+
+    def __init__(self, q):
+        super().__init__()
+        self.q = q
+
+    def run(self):
+        while True:
+            if not self.q.empty():
+                data = self.q.get()
+                self.poped.emit(data)
 
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
@@ -23,6 +49,18 @@ class MyWindow(QMainWindow, form_class):
 
 
         self.notice_2.append('프로그램 시작')
+
+        # 크롤링 체크 멀티프로세싱으로 돌리기
+        q = Queue()
+        # producer process
+        p = Process(name="producer", target=Sub_main, args=(q,), daemon=True)
+        p.start()
+
+        # thread for data consumer
+        self.consumer = Get_stack(q)
+        self.consumer.poped.connect(self.print_data)
+        self.consumer.start()
+
 
         # 상태바 타이머
         self.timer = QTimer(self)
@@ -42,6 +80,10 @@ class MyWindow(QMainWindow, form_class):
         self.coin_list_cbox.currentIndexChanged.connect(self.coin_choice)
         self.coin_list_cbox_2.currentIndexChanged.connect(self.coin_choice)
         self.coin_list_cbox_3.currentIndexChanged.connect(self.coin_choice)
+
+    @pyqtSlot(str)
+    def print_data(self, data):
+        self.notice_2.append(data)
 
 
     def timeout(self):
