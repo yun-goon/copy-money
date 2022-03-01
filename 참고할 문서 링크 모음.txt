@@ -48,3 +48,6 @@ https://chicken-nlp.tistory.com/4
 
 *pyqt
 https://codetorial.net/pyqt5/widget/qcombobox.html
+
+*queue
+https://docs.python.org/ko/3/library/queue.html?highlight=queue#module-queue
