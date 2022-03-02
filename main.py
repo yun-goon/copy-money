@@ -90,12 +90,6 @@ class MyWindow(QMainWindow, form_class):
         # 1초에 1개씩 코인 확인
         if self.checkBox.isChecked():      # 감시여부 체크시
             self.start.search_routine()    # 코인 1개 검사
-        #target = self.start.check_target()
-        target = self.start.Worker.check_target
-
-
-        self.notice_2.append(str(target))
-
 
         # 맨아래 시간표시
         current_time = QTime.currentTime()

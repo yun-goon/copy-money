@@ -9,10 +9,6 @@ import multiprocessing as mp
 from core.upload_data import Get_data
 from core.smart_bot import *
 import core.upbit
-import threading
-from queue import Queue
-
-
 
 class Strainer():
     def __init__(self):
@@ -22,15 +18,12 @@ class Strainer():
         self.cnt = 0
         self.len = len(self.market_coin)
 
-
-
     # 1개씩 조건에 맞는지 찾아볼때 쓰레드 이용하기위한 클래스
     class Worker(threading.Thread):
         def __init__(self, market, gd):                         # 코인명과 Get_data 클래스 위치 가져옴
             super().__init__()
             self.market = market                                # 클래스 내 전체에서 변수 사용하기위해
             self.gd = gd
-
 
         def run(self):
             # 일봉 분봉데이터 불러오기
@@ -62,10 +55,10 @@ class Strainer():
             print('macd',macd[0]['OCL'])
             print('wiilams',williams[0]['W'])
 
-            
+            '''
             if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
                     and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
-                    and Decimal(str(rsi[2]['RSI'])) < Decimal(str(30))):
+                    and Decimal(str(rsi[2]['RSI'])) < Decimal(str(300))):
                 rsi_val = True
                 print(target_item,'rsi good')
 
@@ -92,47 +85,14 @@ class Strainer():
 
             if rsi_val and mfi_val and ocl_val and williams_val:
                 print('대상 발견',target_item)
-            '''
-
-            if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(30))):
-                rsi_val = True
-                #print(target_item, 'rsi good')
+            
 
 
-            if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(30))):
-                mfi_val = True
-                #print(target_item, 'mfi good')
 
-            if (Decimal(str(macd[0]['OCL'])) > Decimal(str(0))):
-                ocl_val = True
-                #print(target_item, 'ocl good')
-
-            if(Decimal(str(williams[0]['W'])) > Decimal(str(-80))):
-                williams_val = True
-                #print(target_item, 'williams good')
-
-            if rsi_val and mfi_val and ocl_val and williams_val:
-                print('대상 발견', target_item)
-                self.target = target_item
-
-
-        def check_target(self):
-            # target_item = self.market
-            # target = q.get()
-            return self.target
-
-
-    #def check_target(self):
-    #    # target_item = self.market
-    #    target = testestest
-    #    # target = q.get()
-    #    return target
 
             # 여기서부터 조건 짜서 넣기
-            #if True:
-            #    print(self.market) # 딕션 타입
-
-
+            if True:
+                print(self.market) # 딕션 타입
 
 
 
@@ -147,8 +107,3 @@ class Strainer():
         coin = self.market_coin[self.cnt]
         t = self.Worker(coin, self.gd)                          # thread 준비
         t.start()                                               # sub thread의 run 메서드를 호출
-
-
-
-
-        # Queue <- 이거 사용하면 깔끔해질꺼같음(?)
