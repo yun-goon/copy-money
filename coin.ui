@@ -51,7 +51,7 @@
           </column>
           <column>
            <property name="text">
-            <string>진행상황</string>
+            <string>타입</string>
            </property>
           </column>
          </widget>

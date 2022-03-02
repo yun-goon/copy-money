@@ -26,28 +26,29 @@ class Get_data():
         self.secret_key = pr.secret_key
         self.server_url = 'http://api.upbit.com'
 
-    # 실시간으로 스택 쌓는곳
-    def producer(self, q):
-        # upbit 크롤링
-        q.put('업비트 공지사항 크롤링 중...')
-
         # Headers & Page URLs
-        headers = {
+        self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'}
-        page_url = 'https://api-manager.upbit.com/api/v1/notices?page=1&per_page=20&thread_name=general'
-        query_url = 'https://upbit.com/service_center/notice?id='
-        notice_cnt = 0
+        self.page_url = 'https://api-manager.upbit.com/api/v1/notices?page=1&per_page=20&thread_name=general'
+        self.query_url = 'https://upbit.com/service_center/notice?id='
+        self.notice_cnt = 0
 
-        while True:  # 반복설정
-            # upbit 크롤링
+    # upbit 크롤링 -> 5초마다 반복
+    def upbit_notice(self, cnt=0):
+        return_list = []
+        response = requests.get(self.page_url, headers=self.headers)  # 추출
+        upbit_notice = response.json()  # json 형식으로
+        repeat_cnt = len(upbit_notice['data']['list']) - self.notice_cnt
 
-            response = requests.get(page_url, headers=headers)  # 추출
-            upbit_notice = response.json()  # json 형식으로
-            repeat_cnt = len(upbit_notice['data']['list']) - notice_cnt
+        if cnt:
+            for notice in range(cnt):
+                return_list.append(upbit_notice['data']['list'][notice]['title'])
 
-            if notice_cnt != 0 and repeat_cnt != 0:
-                for notice in range(repeat_cnt):
-                    q.put(upbit_notice['data']['list'][notice])
+        elif self.notice_cnt != 0 and repeat_cnt != 0:
+            for notice in range(repeat_cnt):
+                return_list.append(upbit_notice['data']['list'][notice]['title'])
+
+        return return_list
 
     # 계좌에 보유한 코인정보
     def get_wallet(self):

@@ -19,11 +19,10 @@ import multiprocessing as mp
 
 form_class = uic.loadUiType("coin.ui")[0]
 
-# 스택 받아올 함수실행 클래스 -----> 앞서 만들었던 것들 여기로 옮기기
+# 스택 받아올 함수실행 클래스
 class Sub_main():
-    def __init__(self, q):
-        self.gd = Get_data()  # upload_data를 gd로 바꿈
-        self.gd.producer(q)
+    def __init__(self, q, start):
+        start.producer(q)
 
 # 스택 받아오는곳 분류해서 메인 ui로 데이터보냄
 class Get_stack(QThread):
@@ -37,7 +36,9 @@ class Get_stack(QThread):
         while True:
             if not self.q.empty():
                 data = self.q.get()
-                self.poped.emit(data)
+                print(data)
+                if data:
+                    self.poped.emit(data)
 
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
@@ -48,12 +49,17 @@ class MyWindow(QMainWindow, form_class):
         self.start = Strainer() # base_searching을 start로
 
 
-        self.notice_2.append('프로그램 시작')
+        self.notice_2.append('프로그램 시작\n')
+        self.notice_2.append('업비트 공지사항 크롤링 중...')
+        notice_list = self.gd.upbit_notice(5)  # 프로그램 시작시 상위 5개 upbit 공지사항 업데이트
+        if notice_list:
+            for i in notice_list:
+                self.notice_2.append(i)
 
-        # 크롤링 체크 멀티프로세싱으로 돌리기
+        # 조건검색 체크 멀티프로세싱으로 돌리기
         q = Queue()
         # producer process
-        p = Process(name="producer", target=Sub_main, args=(q,), daemon=True)
+        p = Process(name="producer", target=Sub_main, args=(q, self.start,), daemon=True)
         p.start()
 
         # thread for data consumer
@@ -65,7 +71,7 @@ class MyWindow(QMainWindow, form_class):
         # 상태바 타이머
         self.timer = QTimer(self)
         self.timer.start(1000)
-        self.timer.timeout.connect(self.timeout) #timer를 timeout에 열결
+        self.timer.timeout.connect(self.timeout) #timer를 timeout에 연결
 
         # 5초 타이머
         self.timer2 = QTimer(self)
@@ -83,14 +89,11 @@ class MyWindow(QMainWindow, form_class):
 
     @pyqtSlot(str)
     def print_data(self, data):
-        self.notice_2.append(data)
+        # if self.checkBox.isChecked():  # 감시여부 체크시
+        self.searched_coin.append(data)
 
 
     def timeout(self):
-        # 1초에 1개씩 코인 확인
-        if self.checkBox.isChecked():      # 감시여부 체크시
-            self.start.search_routine()    # 코인 1개 검사
-
         # 맨아래 시간표시
         current_time = QTime.currentTime()
 
@@ -102,6 +105,11 @@ class MyWindow(QMainWindow, form_class):
     def timeout2(self):
         if self.checkBox.isChecked():       # 감시여부 체크시
             self.ButtonstartPush()          # 5초마다 버튼 누른효과
+
+        notice_list = self.gd.upbit_notice()  # upbit 공지사항 업데이트
+        if notice_list:
+            for i in notice_list:
+                self.notice_2.append(i)
 
     def coin_choice(self):
         '''
