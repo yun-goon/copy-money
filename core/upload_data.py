@@ -1,3 +1,4 @@
+import threading
 import pyupbit
 import jwt
 import uuid
@@ -18,25 +19,30 @@ from urllib.parse import urlencode
 from core import upbit
 from pandas.io.json import json_normalize
 
-# 공통 모듈 Import
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-# Program Name
-pgm_name = 'mon_notice'
-pgm_name_kr = '업비트 공지사항 크롤링'
-
-# Headers & Page URLs
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'}
 page_url = 'https://api-manager.upbit.com/api/v1/notices?page=1&per_page=20&thread_name=general'
 query_url = 'https://upbit.com/service_center/notice?id='
-
 
 class Get_data():
     def __init__(self):
         self.access_key = pr.access_key
         self.secret_key = pr.secret_key
         self.server_url = 'http://api.upbit.com'
+
+    def producer(self, q):
+        q.put('업비트 공지사항 크롤링 중...')
+        notice_cnt = 0
+
+        while True:
+
+            response = requests.get(page_url, headers=headers)
+            upbit_notice = response.json()
+            repeat_cnt = len(upbit_notice['data']['list']) - notice_cnt
+
+            if notice_cnt != 0 and repeat_cnt !=0:
+                for notice in range(repeat_cnt):
+                    q.put(upbit_notice['data']['list'][notice])
+
 
     # 계좌에 보유한 코인정보
     def get_wallet(self):

@@ -1,5 +1,9 @@
 import sys
 import pyupbit
+import os
+import time
+import logging
+import requests
 from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pandas.io.json import json_normalize
@@ -10,8 +14,31 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import json
 import plotly.graph_objects as go
+from multiprocessing import Process, Queue
+import multiprocessing as mp
 
 form_class = uic.loadUiType("coin.ui")[0]
+
+
+class Sub_main():
+    def __init__(self,q):
+        self.gd = Get_data()
+        self.gd.producer(q)
+
+
+
+class Get_stack(QThread):
+    poped = pyqtSignal(str)
+
+    def __init__(self,q):
+        super().__init__()
+        self.q = q
+
+    def run(self):
+        while True:
+            if not self.q.empty():
+                data = self.q.get()
+                self.poped.emit(data)
 
 class MyWindow(QMainWindow, form_class):
     def __init__(self):
@@ -23,6 +50,19 @@ class MyWindow(QMainWindow, form_class):
 
 
         self.notice_2.append('프로그램 시작')
+
+        q = Queue()
+
+        p = Process(name="producer", target=Sub_main, args=(q,), daemon=True)
+        p.start()
+
+        self.consumer = Get_stack(q)
+        self.consumer.poped.connect(self.print_data)
+        self.consumer.start()
+
+
+        self.consumer = Get_stack(q)
+
 
         # 상태바 타이머
         self.timer = QTimer(self)
@@ -43,6 +83,9 @@ class MyWindow(QMainWindow, form_class):
         self.coin_list_cbox_2.currentIndexChanged.connect(self.coin_choice)
         self.coin_list_cbox_3.currentIndexChanged.connect(self.coin_choice)
 
+    @pyqtSlot(str)
+    def print_data(self, data):
+        self.notice_2.append(data)
 
     def timeout(self):
         # 1초에 1개씩 코인 확인
